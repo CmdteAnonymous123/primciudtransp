@@ -12,7 +12,7 @@
         @csrf
         
         <div>
-            <label for="username" class="block text-gray-700 font-semibold">Nombre de usuario</label>
+            <label for="username" class="block text-gray-700 font-semibold">Apodo</label>
             <input type="text" name="username" id="username" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
@@ -67,10 +67,21 @@
         
         <!-- Preguntas aleatorias -->
         <div>
-            <label class="block text-gray-700 font-semibold">Preguntas de validación</label>
-            <div id="preguntas" class="space-y-3">
-                <!-- Aquí se insertarán las preguntas dinámicamente -->
-            </div>
+            <label for="pregunta_1" class="block text-gray-700 font-semibold">Pregunta 1</label>
+            <input type="text" name="pregunta_1" id="pregunta_1" required 
+                class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
+        </div>
+        
+        <div>
+            <label for="pregunta_2" class="block text-gray-700 font-semibold">Pregunta 2</label>
+            <input type="text" name="pregunta_2" id="pregunta_2" required 
+                class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
+        </div>
+        
+        <div>
+            <label for="pregunta_3" class="block text-gray-700 font-semibold">Pregunta 3</label>
+            <input type="text" name="pregunta_3" id="pregunta_3" required 
+                class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
         
         <!-- Ubicación (Capturada automáticamente en el backend) -->
