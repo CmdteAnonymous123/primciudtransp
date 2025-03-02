@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+
+use Illuminate\Support\Facades\Hash;
 
 #[ORM\Entity]
 #[ORM\Table(name: "users")]
@@ -19,20 +22,23 @@ class User extends Authenticatable
     #[ORM\GeneratedValue]
     private int $id;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: "string", length: 191)]
     private string $username;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: "string", length: 191)]
     private string $name;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[ORM\Column(type: "string", length: 191, nullable: true)]
     private ?string $email;
+    
+    #[ORM\Column(type: "string", length: 191, nullable: true)]
+    private ?string $password;    
 
     #[ORM\Column(type: "string", length: 50, unique: true)]
     private string $cedula;
 
     #[ORM\Column(type: "date", nullable: true)]
-    private ?string $fecha_nac;
+    private ?DateTime $fecha_nac;
 
     #[ORM\Column(type: "string", length: 2, nullable: true)]
     private ?string $lugar_emision;
@@ -112,6 +118,23 @@ class User extends Authenticatable
     {
         $this->email = $email;
     }
+    
+    
+    
+    
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): void
+    {
+        $this->password = $password;              
+    }    
+    
+    
+    
+    
 
     public function getCedula(): string
     {
@@ -123,12 +146,12 @@ class User extends Authenticatable
         $this->cedula = $cedula;
     }
 
-    public function getFechaNac(): ?string
+    public function getFechaNac(): ?DateTime
     {
         return $this->fecha_nac;
     }
 
-    public function setFechaNac(?string $fecha_nac): void
+    public function setFechaNac(?DateTime $fecha_nac): void
     {
         $this->fecha_nac = $fecha_nac;
     }

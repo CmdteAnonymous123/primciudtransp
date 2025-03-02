@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<meta charset="UTF-8">
 <div class="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-xl font-bold mb-4 text-center">Bienvenido a las encuestas de Transparencia</h2>
     <p class="text-sm text-gray-600 mb-6 text-center">
@@ -12,13 +13,13 @@
         @csrf
         
         <div>
-            <label for="username" class="block text-gray-700 font-semibold">Apodo</label>
+            <label for="username" class="block text-gray-700 font-semibold">Apodo(Si ya existe añada números por ej. Pepe123)</label>
             <input type="text" name="username" id="username" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
         
         <div>
-            <label for="password" class="block text-gray-700 font-semibold">Contraseña</label>
+            <label for="password" class="block text-gray-700 font-semibold">Contraseña(¡anote en un papel!)</label>
             <input type="password" name="password" id="password" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
@@ -43,7 +44,7 @@
         </div>
         
         <div>
-            <label for="ci" class="block text-gray-700 font-semibold">Cédula de identidad</label>
+            <label for="ci" class="block text-gray-700 font-semibold">Cédula de identidad(no coloque aquí lugar de emisión LP, SC...)</label>
             <input type="text" name="ci" id="ci" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
@@ -112,5 +113,5 @@
 @endsection
 
 @section('scripts')
-    {!! NoCaptcha::renderJs() !!}
+    {!! NoCaptcha::renderJs('es') !!}    
 @endsection

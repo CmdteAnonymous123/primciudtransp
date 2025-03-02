@@ -27,7 +27,7 @@
             </div>
             
             <!-- Re-Captcha -->
-            <div class="mb-4 flex justify-center">
+            <div class="mb-4 flex justify-center">                
                 {!! NoCaptcha::display() !!}
                 @error('g-recaptcha-response')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -47,5 +47,5 @@
 @endsection
 
 @section('scripts')
-    {!! NoCaptcha::renderJs() !!}
+    {!! NoCaptcha::renderJs('es') !!}
 @endsection

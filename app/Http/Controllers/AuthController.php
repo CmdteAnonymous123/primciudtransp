@@ -1,6 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Models\Pregunta;
+
+header('Content-Type: text/html; charset=UTF-8');
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +20,11 @@ class AuthController extends Controller
     // Mostrar la vista de registro
     public function showRegister()
     {
-        return view('auth.registro');
+        $preguntas = Pregunta::inRandomOrder()->limit(3)->get();
+        //return view('auth.registro');
+        return view('auth.registro', compact('preguntas'));
     }
-
+/*  //ESTO LO VA A MANEJAR POR API API\REGISTERCONTROLER.PHP
     // Procesar registro de usuario
     public function register(Request $request)
     {
@@ -57,6 +61,8 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Ahora puede iniciar sesión.');
     }
+ * 
+ */
 
     // Procesar login de usuario
     public function login(Request $request)
