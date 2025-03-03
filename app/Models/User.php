@@ -42,10 +42,24 @@ class User extends Authenticatable
 
     #[ORM\Column(type: "string", length: 2, nullable: true)]
     private ?string $lugar_emision;
+    
+    #[ORM\Column(type: "string", length: 30, nullable: true)]
+    private ?string $location;        
+           
+
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?DateTime $created_at;
+
+
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?DateTime $updated_at;    
+    
 
     #[ORM\ManyToOne(targetEntity: Partido::class)]
     #[ORM\JoinColumn(name: "id_partido", referencedColumnName: "id_partido", nullable: true)]
     private ?Partido $partido;
+    
+ 
 
     /**
      * The attributes that are mass assignable.
@@ -165,6 +179,17 @@ class User extends Authenticatable
     {
         $this->lugar_emision = $lugar_emision;
     }
+    
+    
+    public function getLocation(): ?string {
+        return $this->location;
+    }
+
+    public function setLocation(?string $location): void {
+        $this->location = $location;
+    }    
+    
+    
 
     public function getPartido(): ?Partido
     {
@@ -175,4 +200,22 @@ class User extends Authenticatable
     {
         $this->partido = $partido;
     }
+    
+public function getCreatedAtCustom(): ?DateTime {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAtCustom(): ?DateTime {
+        return $this->updated_at;
+    }
+
+    public function setCreatedAtCustom(?DateTime $created_at): void {
+        $this->created_at = $created_at;
+    }
+
+    public function setUpdatedAtCustom(?DateTime $updated_at): void {
+        $this->updated_at = $updated_at;
+    }    
+    
+    
 }

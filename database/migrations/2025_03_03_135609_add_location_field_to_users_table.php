@@ -8,16 +8,16 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *php artisan make:migration add_votante_fields_to_users_table --table=users
+     *
      * @return void
      */
     public function up()
     {
+
         Schema::table('users', function (Blueprint $table) {
-            $table->string('cedula', 50)->unique()->after('username');
-            $table->date('fecha_nac')->nullable()->after('cedula');
-            $table->enum('lugar_emision', ['SC', 'LP', 'OR', 'CB', 'TA', 'BE', 'PA', 'CH', 'PO'])->nullable()->after('fecha_nac');
-        });
+            $table->string('location',30)->nullable()->after('password');
+        });             
+        
     }
 
     /**
@@ -28,7 +28,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['cedula', 'fecha_nac', 'lugar_emision']);
-        });
+            $table->dropColumn('location');
+        });        
+        
     }
 };

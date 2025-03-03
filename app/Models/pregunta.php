@@ -13,6 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 class pregunta extends Model
 {
     use HasFactory;
+    
+    protected $table = 'pregunta';
+    protected $primaryKey = 'id_pregunta'; // Define la clave primaria correctamente    
+    
+    
+    
     /**
     * @[ORM\Id]
     * @[ORM\Column(type: "smallint", unsigned: true)]

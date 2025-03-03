@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+    /** php artisan make:migration add_username_to_users_table --table=users
      * Run the migrations.
      *
      * @return void
