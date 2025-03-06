@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
-* @[ORM\Entity]
-* @[ORM\Table(name: "pregunta")]
-*/
+#[ORM\Entity]
+#[ORM\Table(name: "pregunta")]
 class pregunta extends Model
 {
     use HasFactory;
@@ -17,23 +15,15 @@ class pregunta extends Model
     protected $table = 'pregunta';
     protected $primaryKey = 'id_pregunta'; // Define la clave primaria correctamente    
     
-    
-    
-    /**
-    * @[ORM\Id]
-    * @[ORM\Column(type: "smallint", unsigned: true)]
-    * @[ORM\GeneratedValue]
-    */
+    #[ORM\Id]
+    #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
+    #[ORM\GeneratedValue]
     private int $id_pregunta;
 
-    /*
-    * @[ORM\Column(type: "string", length: 255)]
-    */
+    #[ORM\Column(type: "string", length: 255)]
     private string $enunciado;
 
-    /*
-    * @[ORM\Column(type: "string", length: 255)]
-    */
+    #[ORM\Column(type: "string", length: 255)]
     private string $respuesta;
 
     // Getters y Setters

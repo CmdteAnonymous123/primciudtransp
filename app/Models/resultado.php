@@ -6,46 +6,32 @@ use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="resultado")
- */
+#[ORM\Entity]
+#[ORM\Table(name: "resultado")]
 class resultado extends Model
 {
     use HasFactory;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="bigint", options={"unsigned": true})
-     */
-    private $id_resultado;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "bigint", options: ["unsigned" => true])]
+    private int $id_resultado;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private $votos;
+    #[ORM\Column(type: "integer", options: ["default" => 0])]
+    private int $votos;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned": true})
-     */
-    private $id_eleccion;
+    #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
+    private int $id_eleccion;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned": true})
-     */
-    private $id_candidato;
+    #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
+    private int $id_candidato;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Eleccion")
-     * @ORM\JoinColumn(name="id_eleccion", referencedColumnName="id_eleccion", onUpdate="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: "Eleccion")]
+    #[ORM\JoinColumn(name: "id_eleccion", referencedColumnName: "id_eleccion", onUpdate: "CASCADE")]
     private $eleccion;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Candidato")
-     * @ORM\JoinColumn(name="id_candidato", referencedColumnName="id_candidato", onUpdate="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: "Candidato")]
+    #[ORM\JoinColumn(name: "id_candidato", referencedColumnName: "id_candidato", onUpdate: "CASCADE")]
     private $candidato;
 
     // Getters y Setters

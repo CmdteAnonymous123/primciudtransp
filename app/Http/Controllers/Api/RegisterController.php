@@ -1,5 +1,7 @@
 <?php
+//namespace app\Http\Controllers\Api; //Asi cumple con el standard psr-4, que se yo...
 namespace App\Http\Controllers\Api;
+
 header('Content-Type: text/html; charset=UTF-8');
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -10,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 use App\Models\User;
 use App\Models\Pregunta;
+use App\Models\Extranjeros;
 
 
 
@@ -48,6 +51,58 @@ class RegisterController extends Controller
             $longitude=$coordenadas[1];
             $isInBolivia = $this->validateLocationWithinBolivia($latitude,$longitude);
             if (!$isInBolivia) {
+                                
+                
+                $pais = $data['location'];
+
+                // Buscar si ya existe el país en la tabla Extranjeros                
+                             
+                /*Forma Doctrine 3*/
+                $extranjero = $this->entityManager->getRepository('App\Models\Extranjeros')->findOneBy(array('pais' => $pais));
+                
+                /*forma Eloquent
+                $extranjero = Extranjeros::where('pais', $pais)->first(); */
+                                                
+                
+                if (is_null($extranjero)) {
+                   // Si no existe, crear un nuevo registro
+                    /**Forma Doctrine 3 **/
+                    $fecha_actual = now();
+                    $extranjero = new Extranjeros();
+                    $extranjero->setPais($pais);
+                    $extranjero->setVotos(1);
+                    $extranjero->setCreatedAtCustom($fecha_actual);
+                    $extranjero->setUpdatedAtCustom($fecha_actual);
+                    $this->entityManager->persist($extranjero);
+                    $this->entityManager->flush();                     
+
+                    
+                    /**Forma Eloquent**
+                    
+                    Extranjeros::create([
+                        'pais' => $pais,
+                        'votos' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);     */                                                       
+
+                } else {
+                    
+                    // Si ya existe, aumentar el conteo de votos
+
+                    /**Forma Doctrine 3 **/
+                    $votos = $extranjero->getVotos();                    
+                    $extranjero->setVotos($votos+1);
+                    $this->entityManager->flush();    
+                    
+                    /**Forma Eloquent **
+                    $extranjero->votos += 1;
+                    $extranjero->save();       */             
+                      
+                }                              
+                
+                              
+                
                 return back()->withErrors(['location' => 'La ubicación debe estar dentro de Bolivia.']);
             }
         }
@@ -60,7 +115,7 @@ class RegisterController extends Controller
         ];      
         
         foreach ($preguntasRespondidas as $id => $respuesta) {
-            $pregunta = \App\Models\Pregunta::find($id);
+            $pregunta = Pregunta::find($id);
             if (!$pregunta || $pregunta->respuesta !== $respuesta) {
                 return back()->withErrors(['pregunta_' . $id => 'Respuesta incorrecta']);
             }

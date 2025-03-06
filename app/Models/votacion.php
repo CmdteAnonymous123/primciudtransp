@@ -2,52 +2,38 @@
 
 namespace App\Models;
 
-use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="votacion")
- */
+#[ORM\Entity]
+#[ORM\Table(name: "votacion")]
 class votacion extends Model
 {
     use HasFactory;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $fecha_hora;
+    #[ORM\Column(type: "datetime")]
+    private \DateTime $fecha_hora;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $ubicacion;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $ubicacion;
 
-    /**
-     * @ORM\Column(type="string", length=45, nullable=true)
-     */
-    private $ip_origen;
+    #[ORM\Column(type: "string", length: 45, nullable: true)]
+    private ?string $ip_origen;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Eleccion")
-     * @ORM\JoinColumn(name="id_eleccion", referencedColumnName="id_eleccion", onUpdate="CASCADE")
-     */
-    private $eleccion;
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: "Eleccion")]
+    #[ORM\JoinColumn(name: "id_eleccion", referencedColumnName: "id_eleccion", onUpdate: "CASCADE")]
+    private Eleccion $eleccion;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id", onUpdate="CASCADE")
-     */
-    private $user;
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: "User")]
+    #[ORM\JoinColumn(name: "id", referencedColumnName: "id", onUpdate: "CASCADE")]
+    private User $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Candidato")
-     * @ORM\JoinColumn(name="id_candidato", referencedColumnName="id_candidato", nullable=true, onUpdate="CASCADE")
-     */
-    private $candidato;
+    #[ORM\ManyToOne(targetEntity: "Candidato")]
+    #[ORM\JoinColumn(name: "id_candidato", referencedColumnName: "id_candidato", nullable: true, onUpdate: "CASCADE")]
+    private ?Candidato $candidato;
 
     // Getters y Setters
     public function getFechaHora(): \DateTime

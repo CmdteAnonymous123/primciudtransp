@@ -5,27 +5,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('partido', function (Blueprint $table) {
-            $table->smallIncrements('id_partido'); // Coincide con SMALLINT UNSIGNED AUTO_INCREMENT
+            $table->smallIncrements('id_partido');
             $table->char('sigla', 255);
-            $table->string('nombre', 255);
+            $table->string('nombre');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('partido');
     }
+
 };

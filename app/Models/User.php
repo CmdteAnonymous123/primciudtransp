@@ -201,7 +201,7 @@ class User extends Authenticatable
         $this->partido = $partido;
     }
     
-public function getCreatedAtCustom(): ?DateTime {
+    public function getCreatedAtCustom(): ?DateTime {
         return $this->created_at;
     }
 
