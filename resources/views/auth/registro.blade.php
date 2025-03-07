@@ -17,7 +17,7 @@
             <input type="text" name="username" id="username" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
-        
+    
         <div>
             <label for="password" class="block text-gray-700 font-semibold">Contraseña(¡anote en un papel!)</label>
             <input type="password" name="password" id="password" required 
@@ -34,15 +34,7 @@
             <label for="fullname" class="block text-gray-700 font-semibold">Nombre completo</label>
             <input type="text" name="fullname" id="fullname" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
-        </div>
-        
-        <!--div>
-            <label for="fecha_nac" class="block text-gray-700 font-semibold">Fecha de nacimiento</label>
-            <input type="text" name="fecha_nac" id="fecha_nac" placeholder="dd/mm/yyyy" required 
-                pattern="\d{2}/\d{2}/\d{4}"
-                class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
-        </div-->
-        
+        </div>             
         
         <div>
             <label for="fecha_nac" class="block text-gray-700 font-semibold">Fecha de nacimiento</label>
@@ -55,19 +47,18 @@
                         <option value="{{ $i }}">{{ $i }}</option>
                     @endfor
                 </select>
-                
+        
                 @php
                     $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
                 @endphp
-
+        
                 <select name="mes" id="mes" required class="w-1/3 px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
                     <option value="" disabled selected>Mes</option>
                     @for ($i = 1; $i <= 12; $i++)
                         <option value="{{ $i }}">{{ $meses[$i - 1] }}</option>
                     @endfor
                 </select>
-                
-
+        
                 <!-- Año -->
                 <select name="anio" id="anio" required 
                     class="w-1/3 px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
@@ -78,32 +69,6 @@
                 </select>
             </div>
         </div>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const form = document.querySelector("form");
-                form.addEventListener("submit", function(event) {
-                    const dia = document.getElementById("dia").value;
-                    const mes = document.getElementById("mes").value;
-                    const anio = document.getElementById("anio").value;
-
-                    if (!dia || !mes || !anio) {
-                        event.preventDefault();
-                        alert("Por favor, selecciona una fecha válida.");
-                        return;
-                    }
-
-                    const fechaFormateada = `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-                    const hiddenFecha = document.createElement("input");
-                    hiddenFecha.type = "hidden";
-                    hiddenFecha.name = "fecha_nac";
-                    hiddenFecha.value = fechaFormateada;
-                    form.appendChild(hiddenFecha);
-                });
-            });
-        </script>
-        
-        
         
         <div>
             <label for="ci" class="block text-gray-700 font-semibold">Cédula de identidad(no coloque aquí lugar de emisión LP, SC...)</label>
@@ -140,7 +105,7 @@
             </div>
         @endforeach
         
-        <!-- Ubicación (Capturada automáticamente en el backend) (para prueba de extranjero:4.944320, 114.957436) -->
+        <!-- Ubicación -->
         <input type="hidden" name="location" id="location" value="">
         
         <!-- Re-Captcha -->
@@ -157,16 +122,77 @@
     </form>
 </div>
 
-<script>
-    // Capturar ubicación
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
-        });
-    } 
-</script>
+<!-- Modal para mensajes de éxito o error -->
+<div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div id="modal-content" class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h3 id="modal-title" class="text-lg font-semibold mb-2"></h3>
+        <p id="modal-message" class="text-gray-700 mb-4"></p>
+        <button id="modal-close" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+            Cerrar
+        </button>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
-    {!! NoCaptcha::renderJs('es') !!}    
+    {!! NoCaptcha::renderJs('es') !!}
+    <script>
+        // Capturar ubicación
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
+            });
+        }
+
+        // Manejo del modal
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalClose = document.getElementById('modal-close');
+
+        function showModal(title, message, isError = false) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message; // Usamos innerHTML para soportar listas
+            modalTitle.className = `text-lg font-semibold mb-2 ${isError ? 'text-red-600' : 'text-green-600'}`;
+            modal.classList.remove('hidden');
+        }
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Mostrar errores si existen
+        @if ($errors->any())
+            const errorList = `<ul class="list-disc pl-5">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`;
+            showModal('Errores en el formulario', errorList, true);
+        @endif
+
+        // Mostrar mensaje de éxito si existe
+        @if (session('success'))
+            showModal('¡Éxito!', '{{ session('success') }}');
+        @endif
+
+        // Validación de fecha
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function(event) {
+                const dia = document.getElementById("dia").value;
+                const mes = document.getElementById("mes").value;
+                const anio = document.getElementById("anio").value;
+
+                if (!dia || !mes || !anio) {
+                    event.preventDefault();
+                    showModal('Error', 'Por favor, selecciona una fecha válida.', true);
+                    return;
+                }
+
+                const fechaFormateada = `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                const hiddenFecha = document.createElement("input");
+                hiddenFecha.type = "hidden";
+                hiddenFecha.name = "fecha_nac";
+                hiddenFecha.value = fechaFormateada;
+                form.appendChild(hiddenFecha);
+            });
+        });
+    </script>
 @endsection
