@@ -100,8 +100,7 @@ class RegisterController extends Controller
                     $extranjero->save();       */             
                       
                 }                              
-                
-                              
+                                              
                 
                 return back()->withErrors(['location' => 'La ubicación debe estar dentro de Bolivia.']);
             }

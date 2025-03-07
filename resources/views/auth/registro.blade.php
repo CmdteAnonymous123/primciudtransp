@@ -140,8 +140,8 @@
             </div>
         @endforeach
         
-        <!-- Ubicación (Capturada automáticamente en el backend) -->
-        <input type="hidden" name="location" id="location" value="4.944320, 114.957436">
+        <!-- Ubicación (Capturada automáticamente en el backend) (para prueba de extranjero:4.944320, 114.957436) -->
+        <input type="hidden" name="location" id="location" value="">
         
         <!-- Re-Captcha -->
         <div class="mb-4 flex justify-center">
@@ -158,12 +158,12 @@
 </div>
 
 <script>
-    /* Capturar ubicación
+    // Capturar ubicación
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
         });
-    } */
+    } 
 </script>
 @endsection
 
