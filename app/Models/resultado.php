@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 class resultado extends Model
 {
     use HasFactory;
+    
+
+    protected $table = 'resultado';
+    protected $primaryKey = 'id_resultado';
+    public $timestamps = false;
+    
+    protected $fillable = ['votos', 'id_eleccion', 'id_candidato'];    
+    
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

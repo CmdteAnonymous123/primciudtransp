@@ -15,7 +15,26 @@ class candidato extends Model
     protected $table = 'candidato';
     protected $primaryKey = 'id_candidato';
     public $timestamps = false;
+    
+    protected $fillable = ['nombres', 'id_partido'];
 
+
+    public function elecciones()
+    {
+        return $this->belongsToMany(
+            Eleccion::class, 
+            'eleccion_candidato', 
+            'id_candidato', 
+            'id_eleccion'
+        );
+    }
+    
+    public function votaciones()
+    {
+        return $this->hasMany(Votacion::class, 'id_candidato', 'id_candidato');
+    }    
+    
+    
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
     #[ORM\GeneratedValue]
@@ -46,6 +65,7 @@ class candidato extends Model
     {
         return $this->belongsTo(Partido::class, 'id_partido', 'id_partido');
     }
+         
 
     #[ORM\OneToMany(targetEntity: "App\\Models\\Resultado", mappedBy: "candidato")]
     public function resultados()

@@ -10,7 +10,30 @@ use Doctrine\ORM\Mapping as ORM;
 class eleccion extends Model
 {
     use HasFactory;
+    
+    protected $table = 'eleccion';
+    protected $primaryKey = 'id_eleccion';
+    public $timestamps = false;   
+    
+    protected $fillable = ['nombre', 'fecha_ini', 'fecha_fin'];
 
+    protected $dates = ['fecha_ini', 'fecha_fin'];
+    
+    public function candidatos()
+    {
+        return $this->belongsToMany(
+            Candidato::class, 
+            'eleccion_candidato', 
+            'id_eleccion', 
+            'id_candidato'
+        );
+    }    
+    
+    public function votaciones()
+    {
+        return $this->hasMany(Votacion::class, 'id_eleccion', 'id_eleccion');
+    }    
+    
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
     #[ORM\GeneratedValue]

@@ -102,7 +102,7 @@ class RegisterController extends Controller
                 }                              
                                               
                 
-                return back()->withErrors(['location' => 'La ubicación debe estar dentro de Bolivia.']);
+                return back()->withErrors(['location' => 'Su ubicación debe estar dentro de Bolivia.']);
             }
         }
 

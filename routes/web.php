@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VotacionController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +32,7 @@ Route::get('/encuesta', function () {
 require __DIR__.'/auth.php';
 
 
-use App\Http\Controllers\AuthController;
+
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
@@ -34,3 +40,12 @@ Route::get('/registro', [AuthController::class, 'showRegister'])->name('register
 Route::post('/registro', [App\Http\Controllers\Api\RegisterController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+Route::get('/votar/{id_eleccion}', [VotacionController::class, 'index'])->name('votar');
+Route::post('/votar', [VotacionController::class, 'store'])->name('votar.store');
+
+
+
+

@@ -67,6 +67,7 @@ class AuthController extends Controller
     // Procesar login de usuario
     public function login(Request $request)
     {
+        
         $request->validate([
             'g-recaptcha-response' => 'required|captcha'
         ]);

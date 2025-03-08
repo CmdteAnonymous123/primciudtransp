@@ -46,6 +46,7 @@
 </div>
 @endsection
 
+
 @section('scripts')
     {!! NoCaptcha::renderJs('es') !!}
 @endsection

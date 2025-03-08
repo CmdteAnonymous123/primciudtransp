@@ -71,7 +71,7 @@
         </div>
         
         <div>
-            <label for="ci" class="block text-gray-700 font-semibold">Cédula de identidad(no coloque aquí lugar de emisión LP, SC...)</label>
+            <label for="ci" class="block text-gray-700 font-semibold">Cédula de identidad (no coloque LP, SC, etc.)</label>
             <input type="text" name="ci" id="ci" required 
                 class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
         </div>
@@ -105,7 +105,7 @@
             </div>
         @endforeach
         
-        <!-- Ubicación -->
+        <!-- Ubicación (para tests: 4.960891, 114.959482 -->
         <input type="hidden" name="location" id="location" value="">
         
         <!-- Re-Captcha -->
@@ -137,7 +137,7 @@
 @section('scripts')
     {!! NoCaptcha::renderJs('es') !!}
     <script>
-        // Capturar ubicación
+        /* Capturar ubicación */
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                 document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;

@@ -14,6 +14,7 @@ class pregunta extends Model
     
     protected $table = 'pregunta';
     protected $primaryKey = 'id_pregunta'; // Define la clave primaria correctamente    
+    public $timestamps = false; 
     
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["unsigned" => true])]

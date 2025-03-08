@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class partido extends Model
 {
     use HasFactory;
+    
+    protected $table = 'partido';
+    protected $primaryKey = 'id_partido';
+    public $timestamps = false;     
+    
 
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["unsigned" => true])]
