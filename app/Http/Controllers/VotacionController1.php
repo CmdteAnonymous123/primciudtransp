@@ -63,107 +63,107 @@ class VotacionController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $user = Auth::user();        
-        
+
         // Validar datos de entrada
         $validatedData = $request->validate([
             'id_eleccion' => 'required|exists:eleccion,id_eleccion',
             'id_candidato' => 'required|exists:candidato,id_candidato',
         ]);
-        
+
         $id_eleccion = $validatedData['id_eleccion'];
-        
+
         // Verificar si el usuario ya votó en esta elección
         $votacionExistente = Votacion::where('id_eleccion', $id_eleccion)
                                     ->where('id', $user->id)
                                     ->exists();
-        
+
         if ($votacionExistente) {
             return redirect()->route('votar', ['id_eleccion' => $id_eleccion])
-                            ->with('error', 'Ya has votado en esta elección.');
+                             ->with('error', 'Ya has votado en esta elección.');
         }
-        
+
         // Verificar si la elección está activa
         $eleccion = Eleccion::findOrFail($id_eleccion);
         $today = Carbon::now('America/La_Paz')->toDateString();
         if ($today < $eleccion->fecha_ini || $today > $eleccion->fecha_fin) {
             return redirect()->route('votar', ['id_eleccion' => $id_eleccion])
-                            ->with('error', 'La elección no está activa en este momento.');
+                             ->with('error', 'La elección no está activa en este momento.');
         }
-        
+
         // Verificar si el candidato participa en esta elección
         $participaCandidato = DB::table('eleccion_candidato')
-                            ->where('id_eleccion', $id_eleccion)
-                            ->where('id_candidato', $validatedData['id_candidato'])
-                            ->exists();
-        
+                                ->where('id_eleccion', $id_eleccion)
+                                ->where('id_candidato', $validatedData['id_candidato'])
+                                ->exists();
+
         if (!$participaCandidato) {
             return redirect()->route('votar', ['id_eleccion' => $id_eleccion])
-                            ->with('error', 'El candidato seleccionado no participa en esta elección.');
+                             ->with('error', 'El candidato seleccionado no participa en esta elección.');
         }
 
         $location = $request->location;
-        
+
         // Crear nuevo registro de votación
         try {
             DB::beginTransaction();
-            
-            $fecha_hora = Carbon::now('America/La_Paz');
-            $stringDate = $fecha_hora->format('Y-m-d H:i:s');
-            
-            $votacion=[
-                'fecha_hora' => $stringDate,
-                'ubicacion' => $location,
+
+            // Registrar el voto
+            $votacion = Votacion::create([
+                'fecha_hora' => Carbon::now('America/La_Paz'),
+                'ubicacion' => $location, 
                 'ip_origen' => $request->ip(),
                 'id_eleccion' => $id_eleccion,
-                'id_usuario' => $user->id,
-                'id_candidato' => $validatedData['id_candidato'],
-                'salt' => env('GOOGLE_MAPS_API_KEY')
-            ];            
-            
-            $votacionData = json_encode($votacion);
-            
-            $hash = hash('sha512', $votacionData);              
-            
-                                           
-            // Registrar el voto
-            Votacion::create([
-                'fecha_hora' => $fecha_hora,
-                'ubicacion' => $votacion['ubicacion'], 
-                'ip_origen' => $votacion['ip_origen'],
-                'id_eleccion' => $votacion['id_eleccion'],
-                'id' => $votacion['id_usuario'],
-                'id_candidato' => $votacion['id_candidato'],
-                'ipfs_hash' => $hash
+                'id' => $user->id,
+                'id_candidato' => $validatedData['id_candidato']
             ]);
-                          
-            
+
+            // Crear el archivo JSON con la votación
+            $votacionData = [
+                'fecha_hora' => $votacion->fecha_hora,
+                'ubicacion' => $votacion->ubicacion,
+                'ip_origen' => $votacion->ip_origen,
+                'id_eleccion' => $votacion->id_eleccion,
+                'id_usuario' => $votacion->id,
+                'id_candidato' => $votacion->id_candidato
+            ];
+
+            $jsonData = json_encode($votacionData);
+
+            // Subir el archivo a IPFS
+            $client = new Ipfs();
+            $response = $client->add($jsonData);
+
+            // Obtener el hash IPFS
+            $ipfsHash = $response['Hash'];
+
+            // Guardar el hash en la tabla de votaciones
+            $votacion->update(['ipfs_hash' => $ipfsHash]);
+
             // Actualizar o crear entrada en la tabla de resultados
             $resultado = Resultado::where('id_eleccion', $id_eleccion)
-                ->where('id_candidato', $validatedData['id_candidato'])
-                ->first();
+                                   ->where('id_candidato', $validatedData['id_candidato'])
+                                   ->first();
 
             if ($resultado) {
-                // Si ya existe un registro para este candidato en esta elección, incrementar los votos
                 $resultado->increment('votos');
             } else {
-                // Si no existe, crear un nuevo registro con 1 voto
                 Resultado::create([
                     'votos' => 1,
                     'id_eleccion' => $id_eleccion,
                     'id_candidato' => $validatedData['id_candidato'],
                 ]);
-            }            
-                        
+            }
+
             DB::commit();
-            
+
             return redirect()->route('votar', ['id_eleccion' => $id_eleccion])
-                            ->with('success', '¡Tu voto ha sido registrado exitosamente!');
+                             ->with('success', '¡Tu voto ha sido registrado exitosamente!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('votar', ['id_eleccion' => $id_eleccion])
-                            ->with('error', 'Ocurrió un error al procesar tu voto. Por favor, intenta nuevamente.');
+                             ->with('error', 'Ocurrió un error al procesar tu voto. Por favor, intenta nuevamente.');
         }
         
 

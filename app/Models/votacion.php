@@ -22,7 +22,8 @@ class votacion extends Model
         'ip_origen', 
         'id_eleccion', 
         'id', 
-        'id_candidato'
+        'id_candidato',
+        'ipfs_hash'
     ];
  
     protected $dates = ['fecha_hora'];
@@ -65,8 +66,23 @@ class votacion extends Model
     #[ORM\ManyToOne(targetEntity: "Candidato")]
     #[ORM\JoinColumn(name: "id_candidato", referencedColumnName: "id_candidato", nullable: true, onUpdate: "CASCADE")]
     private ?Candidato $candidato;
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private $ipfs_hash;
 
     // Getters y Setters
+    
+    
+    public function getIpfs_hash(): ?string
+    {
+        return $this->ipfs_hash;
+    }
+    
+    public function setIpfs_hash(?string $ipfs_hash)
+    {
+        $this->ipfs_hash = $ipfs_hash;
+    }
+    
     public function getFechaHora(): \DateTime
     {
         return $this->fecha_hora;

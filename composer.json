@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2.27",
         "anhskohbo/no-captcha": "^3.7",
+        "cloutier/php-ipfs-api": "^0.0.6",
         "doctrine/dbal": "^4.0",
         "doctrine/orm": "^3.3",
         "guzzlehttp/guzzle": "^7.2",

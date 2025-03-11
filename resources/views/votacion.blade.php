@@ -50,6 +50,9 @@
                     @csrf
                     <input type="hidden" name="id_eleccion" value="{{ $eleccion->id_eleccion }}">
                     <!--input type="text" name="id_eleccion" value="{{ $eleccion->id_eleccion }}"-->
+                    
+                    <!-- Ubicación (para tests: 4.960891, 114.959482 -->
+                    <input type="hidden" name="location" id="location" value="">                    
 
                     <!-- Lista de candidatos -->
                     <div class="space-y-3 mb-8">
@@ -123,6 +126,16 @@
             });
         });
     });
+    
+    
+    /* Capturar ubicación */
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
+        });
+    }    
+    
+    
 </script>
 @endif
 @endsection

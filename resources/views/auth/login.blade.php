@@ -27,12 +27,12 @@
             </div>
             
             <!-- Re-Captcha -->
-            <div class="mb-4 flex justify-center">                
+            <!--div class="mb-4 flex justify-center">                
                 {!! NoCaptcha::display() !!}
                 @error('g-recaptcha-response')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
-            </div>
+            </div-->
                                               
             
             <button type="submit"
@@ -46,7 +46,8 @@
 </div>
 @endsection
 
-
+<!--
 @section('scripts')
     {!! NoCaptcha::renderJs('es') !!}
 @endsection
+-->
